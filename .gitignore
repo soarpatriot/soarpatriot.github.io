@@ -1,8 +1,0 @@
-.idea/*
-/src/lib
-.DS_Store
-/public/*
-node_modules
-npm-debug.log
-*.*.swp
-*.swp
