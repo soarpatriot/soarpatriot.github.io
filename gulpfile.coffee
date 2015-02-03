@@ -10,6 +10,7 @@ open         = require "open"
 path        = require "path"
 lr            = require("tiny-lr")()
 nib     = require("nib")
+marked  = require("marked")
 
 pkg            = require "./package.json"
 
@@ -112,6 +113,7 @@ gulp.task "jade", ->
     .pipe plugins.plumber()
     .pipe plugins.jade
         pretty: true
+        markdown: marked
         data:
             description: pkg.description
             keywords: pkg.keywords
