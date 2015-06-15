@@ -21,19 +21,27 @@
 3. parts of mobile app, even all the app  
 
    why not native?
+
     advantage: 
 
       (1) html css js
+
       (2) consistent
 
     disadvantage:
 
       (1) performance  
+
       (2) constrain
+
+4. static site  
+
+  When do we use static site?
+
+  What's the difference between the traditional web site and static site?
 
 
 ## frontend framework
-
 1. most famous -- bootstrap
 
    foundation, 
@@ -44,8 +52,11 @@
 
  
 2. angular 
+
    react 
+
    backbone 
+
    underscore 
 
 ## frontend base 
@@ -79,27 +90,35 @@
 ## tools
 1. dev and build
 
-  (1) base on node js
+  (1) base on nodejs
+
       npm 
+
       bower
 
   (2) base on ruby 
+
       middleman
 
 2. gulp, grunt, yeoman   
 
 3. *nix  no windows
 
-## front, back, server 
+## front, back, server  --full stack
    1. ruby on rails
+
      (1) full stack
+
      (2) require   css js  
+
      (3) turbolink
+
      (4) production , dev, stage
+
      (5) test 
+
      (6) auto deploy
 
-That's all we need know  -- full stack
 
 
 
