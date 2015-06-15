@@ -1,4 +1,4 @@
-# Today Frontend development bref introduce
+# Today Frontend development brief introduce
 
 1. frontend be used for  
 
@@ -14,19 +14,35 @@
 
 ## frontend be used for 
 
-1. tranditional web site
+1. traditional web site
 
 2. small screen site 
 
 3. parts of mobile app, even all the app  
+
+   why not native?
+    advantage: 
+
+      (1) html css js
+      (2) consistent
+
+    disadvantage:
+
+      (1) performance  
+      (2) constrain
 
 
 ## frontend framework
 
 1. most famous -- bootstrap
 
-   foundation, pure
+   foundation, 
 
+   pure.css
+
+   only using framwork is no enough, some special 
+
+ 
 2. angular 
    react 
    backbone 
@@ -57,20 +73,31 @@
 
    3. browerify  CommonJS
 
-   4. webpack  -- new
+   4. webpack  AMD, CommonJS  
 
 
 ## tools
-1. base on node js
+1. dev and build
 
-   npm 
-   bower
+  (1) base on node js
+      npm 
+      bower
+
+  (2) base on ruby 
+      middleman
 
 2. gulp, grunt, yeoman   
 
 3. *nix  no windows
 
 ## front, back, server 
+   1. ruby on rails
+     (1) full stack
+     (2) require   css js  
+     (3) turbolink
+     (4) production , dev, stage
+     (5) test 
+     (6) auto deploy
 
 That's all we need know  -- full stack
 
