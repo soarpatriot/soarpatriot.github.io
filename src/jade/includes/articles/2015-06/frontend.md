@@ -1,22 +1,30 @@
 # Today Frontend development bref introduce
 
 1. frontend be used for  
+
 2. frontend framework  
+
 3. frontend base  
+
 4. tools   
+
 5. front, back, server  
 
+- - -
 
 ## frontend be used for 
 
 1. tranditional web site
+
 2. small screen site 
+
 3. parts of mobile app, even all the app  
 
 
 ## frontend framework
 
 1. most famous -- bootstrap
+
    foundation, pure
 
 2. angular 
@@ -44,10 +52,12 @@
    AMD CommonJS ES6-Module
 
    1. requirejs,curl  AMD
-   2. seajs  CommonJS
-   3. browerify  CommonJS
-   4. webpack  -- new
 
+   2. seajs  CommonJS
+
+   3. browerify  CommonJS
+
+   4. webpack  -- new
 
 
 ## tools
