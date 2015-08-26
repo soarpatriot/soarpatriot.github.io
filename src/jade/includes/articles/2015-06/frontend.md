@@ -1,4 +1,4 @@
-# Today Frontend development brief introduce
+# Frontend development brief introduce
 
 1. frontend be used for  
 

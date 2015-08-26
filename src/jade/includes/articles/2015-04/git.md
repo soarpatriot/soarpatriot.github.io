@@ -23,6 +23,7 @@ Pictures are from internet and commands will be explained when I am typing it.
 ## 2. Basic 
 
 (1) git init, git clone, git checkout 
+    .git directory   .gitignore file 
 
 (2) file status / git status 
 <img src="images/area.png" class="git-picture" />
@@ -67,6 +68,7 @@ Pictures are from internet and commands will be explained when I am typing it.
 
 (10) git config
 
+(11) git rm 
 ## 4. Improved 
 
 (1) git commit --amend 
