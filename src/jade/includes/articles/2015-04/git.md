@@ -1,4 +1,11 @@
-# git bref introduce
+# git brief introduce
+
+1. offline coding 
+2. branch 
+3. speed 
+4. social coding (github)
+
+
 
 1.Intro 2.Basic 3.Common 4.Improved
 
@@ -70,6 +77,8 @@ Pictures are from internet and commands will be explained when I am typing it.
 
 (11) git rm 
 ## 4. Improved 
+
+(0) https :  git 
 
 (1) git commit --amend 
 
