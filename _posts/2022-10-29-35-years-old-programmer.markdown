@@ -17,9 +17,4 @@ categories: thinking
 问题不一定是年龄，是我们的选择，有的人8岁就活成了80岁的样子，希望我们的每天都过的有意义，心里有梦，眼里有光，活奔乱跳，勇敢智慧。
 
 
-<!-- {{site.static_files}}
-{% assign image_files = site.static_files | where: "image", true %}
-{% for myimage in image_files %}
-  ![image]{{ myimage.path }}
-{% endfor %} -->
 
