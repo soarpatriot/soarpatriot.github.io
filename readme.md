@@ -1,5 +1,5 @@
 
-
+[![pages-build-deployment](https://github.com/soarpatriot/soarpatriot.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/soarpatriot/soarpatriot.github.io/actions/workflows/pages/pages-build-deployment)
 
 1. 普罗克拉斯提斯之床
 2. 安泰俄斯之死。
