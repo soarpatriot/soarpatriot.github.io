@@ -10,7 +10,6 @@ categories: thinking
 2. integrity - prevent the unauthorized creating, modifying, deleting of the information
 3. availability - make sure the legal users can access the resource when they need.
 
-
 Threat modeling -- the process of checking the theat
 
 The process of thinking and checking the threat and weakness of the system will increas the security of apis.
