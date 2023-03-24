@@ -1,0 +1,36 @@
+---
+layout: post
+title:  "oauth2"
+date:   2023-03-11
+categories: doing
+---
+
+> why we need oauth2?
+
+The authentication and authorization is isolated when the web epic.
+
+
+The apis and web2 need the isolated information inlands connected.
+1. Could the cookie help this connection?
+
+The delegated authorization ?
+Oauth2
+
+The duplicated registeration ?
+
+
+Oauth2 flow
+1. authorization code
+2. implict
+2. password
+3. client credential
+
+The possible vulnerabilities of implementing oauth2
+
+
+Customization Oauth2
+Customizing OAuth2 can be a complex task, and it's essential to follow best practices to ensure the security of the implementation. It's recommended to use a well-known and trusted OAuth2 library and follow the OAuth2 specification closely to avoid security vulnerabilities. Additionally, it's crucial to test the implementation thoroughly to ensure that it works as expected and to identify any potential issues or vulnerabilities.
+
+
+Oauth2 faclitates the communication of the world easier.
+
