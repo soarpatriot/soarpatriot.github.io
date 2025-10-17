@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "location"
+title:  "yihutuan"
 date:   2024-03-02
 categories: thinking
 ---
