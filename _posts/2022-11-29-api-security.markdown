@@ -1,30 +1,36 @@
 ---
 layout: post
-title:  "api security"
+title:  "API Security"
 date:   2022-10-19 14:50:20 +0800
 categories: thinking
 ---
 
-> api security triad
-1. confidentiality - the assets only can be accessed by the authorized people.
-2. integrity - prevent the unauthorized creating, modifying, deleting of the information
-3. availability - make sure the legal users can access the resource when they need.
+> API Security Triad
 
-Threat modeling -- the process of checking the theat
+1. **Confidentiality** — Assets can only be accessed by authorized people.
+2. **Integrity** — Prevent unauthorized creation, modification, or deletion of information.
+3. **Availability** — Ensure legitimate users can access resources when they need them.
 
-The process of thinking and checking the threat and weakness of the system will increas the security of apis.
+---
 
-STRIDE - threat category
-1. spoofling
-2. tampering
-3. repudiation
-4. information disclosure
-5. denial of service
-6. elevation of privilege
+### Threat Modeling
 
-Security Mechanisms
-1. encryption
-2. authentication
-3. access control & authoriztion
-4. audit logging
-5. rate-limiting
+Threat modeling is the process of identifying and evaluating threats and weaknesses in a system. Systematically thinking through potential threats increases the security of APIs.
+
+**STRIDE** — Threat categories:
+1. Spoofing
+2. Tampering
+3. Repudiation
+4. Information Disclosure
+5. Denial of Service
+6. Elevation of Privilege
+
+---
+
+### Security Mechanisms
+
+1. Encryption
+2. Authentication
+3. Access Control & Authorization
+4. Audit Logging
+5. Rate Limiting
