@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书单 Book List</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,300&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --paper: #F5F0E8;
+    --paper-dark: #EDE6D6;
+    --ink: #2C2416;
+    --ink-light: #5C4F3A;
+    --ink-faint: #8A7D6B;
+    --cinnabar: #A0522D;
+    --cinnabar-light: #C4734A;
+    --gold: #B8960C;
+    --gold-muted: #D4BC6A;
+    --thread: #8B0000;
+    --cream: #FAF7F0;
+  }
+
+  body {
+    background: #E8E0D0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  .poster {
+    width: 800px;
+    min-height: 1400px;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px rgba(44,36,22,0.08),
+      0 8px 24px rgba(44,36,22,0.12),
+      0 24px 48px rgba(44,36,22,0.06);
+  }
+
+  /* Paper texture overlay */
+  .poster::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(44,36,22,0.008) 3px,
+        rgba(44,36,22,0.008) 4px
+      );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Thread binding decoration — left edge */
+  .binding {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    background: linear-gradient(90deg, var(--paper-dark) 0%, var(--paper) 100%);
+    z-index: 2;
+  }
+
+  .binding::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 60px;
+    bottom: 60px;
+    width: 1.5px;
+    background: repeating-linear-gradient(
+      180deg,
+      var(--thread) 0px,
+      var(--thread) 12px,
+      transparent 12px,
+      transparent 20px
+    );
+    opacity: 0.35;
+  }
+
+  .binding-dot {
+    position: absolute;
+    left: 11px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--thread);
+    opacity: 0.3;
+    z-index: 3;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    padding: 56px 52px 48px 64px;
+  }
+
+  /* ─── Header ─── */
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    position: relative;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+  }
+
+  .header-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .header-ornament .line {
+    width: 48px;
+    height: 0.5px;
+    background: var(--gold-muted);
+  }
+
+  .header-ornament .diamond {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    opacity: 0.6;
+  }
+
+  .title-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: 12px;
+    margin-bottom: 6px;
+  }
+
+  .title-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ink-faint);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+
+  /* ─── Sections ─── */
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 0.5px solid rgba(44,36,22,0.12);
+  }
+
+  .seal {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--cinnabar);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cinnabar);
+    flex-shrink: 0;
+    position: relative;
+    opacity: 0.8;
+  }
+
+  .seal::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 0.5px solid var(--cinnabar);
+    border-radius: 1px;
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 3px;
+  }
+
+  .section-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 2px;
+    margin-left: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .section-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-left: auto;
+    letter-spacing: 1px;
+  }
+
+  /* ─── Book Items ─── */
+  .book-list {
+    list-style: none;
+  }
+
+  .book-item {
+    display: flex;
+    align-items: baseline;
+    padding: 7px 0;
+    position: relative;
+  }
+
+  .book-item + .book-item {
+    border-top: 0.5px solid rgba(44,36,22,0.06);
+  }
+
+  .book-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--gold-muted);
+    width: 24px;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 12px;
+    font-style: italic;
+  }
+
+  .book-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .book-title-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 8px;
+  }
+
+  .book-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+  }
+
+  .book-author {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  .book-desc {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--ink-light);
+    margin-top: 2px;
+    line-height: 1.6;
+    opacity: 0.75;
+  }
+
+  /* ─── Divider between sections ─── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 8px 0 36px;
+    opacity: 0.3;
+  }
+
+  .section-divider .dot {
+    width: 3px;
+    height: 3px;
+    background: var(--ink-faint);
+    border-radius: 50%;
+  }
+
+  .section-divider .dash {
+    width: 24px;
+    height: 0.5px;
+    background: var(--ink-faint);
+  }
+
+  /* ─── Footer ─── */
+  .footer {
+    margin-top: 44px;
+    padding-top: 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+  }
+
+  .footer-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ink-faint);
+    letter-spacing: 3px;
+    opacity: 0.6;
+  }
+
+  .footer-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--ink-faint);
+    letter-spacing: 2px;
+    opacity: 0.4;
+    margin-top: 4px;
+  }
+
+  /* Subtle corner flourishes */
+  .corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    z-index: 3;
+    opacity: 0.15;
+  }
+
+  .corner-tl {
+    top: 20px;
+    left: 44px;
+    border-top: 1px solid var(--ink);
+    border-left: 1px solid var(--ink);
+  }
+
+  .corner-tr {
+    top: 20px;
+    right: 20px;
+    border-top: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+  }
+
+  .corner-bl {
+    bottom: 20px;
+    left: 44px;
+    border-bottom: 1px solid var(--ink);
+    border-left: 1px solid var(--ink);
+  }
+
+  .corner-br {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Thread binding left edge -->
+  <div class="binding">
+    <div class="binding-dot" style="top: 100px;"></div>
+    <div class="binding-dot" style="top: 460px;"></div>
+    <div class="binding-dot" style="top: 820px;"></div>
+    <div class="binding-dot" style="top: 1180px;"></div>
+  </div>
+
+  <!-- Corner flourishes -->
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="content">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-ornament">
+        <span class="line"></span>
+        <span class="diamond"></span>
+        <span class="line"></span>
+      </div>
+      <h1 class="title-cn">书 单</h1>
+      <p class="title-en">Book List</p>
+    </header>
+
+    <!-- Section 1: 思想 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="seal">思</div>
+        <div>
+          <span class="section-title">思想</span>
+          <span class="section-subtitle">Thought</span>
+        </div>
+        <span class="section-count">13 books</span>
+      </div>
+      <ul class="book-list">
+        <li class="book-item">
+          <span class="book-num">1</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">影响力</span>
+              <span class="book-author">Robert B. Cialdini</span>
+            </div>
+            <div class="book-desc">揭示人类说"是"背后的心理机制</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">2</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">怪诞行为学</span>
+              <span class="book-author">Dan Ariely</span>
+            </div>
+            <div class="book-desc">行为经济学奠基之作</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">3</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">思辨与立场</span>
+              <span class="book-author">Richard Paul &amp; Linda Elder</span>
+            </div>
+            <div class="book-desc">批判性思维的系统训练手册</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">4</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">反脆弱</span>
+              <span class="book-author">Nassim Nicholas Taleb</span>
+            </div>
+            <div class="book-desc">从混乱与压力中获益成长</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">5</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">富足</span>
+              <span class="book-author">Peter Diamandis &amp; Steven Kotler</span>
+            </div>
+            <div class="book-desc">关于未来乐观主义的宣言</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">6</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">元智慧</span>
+            </div>
+            <div class="book-desc">探讨底层思维方式与认知框架</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">7</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">漫步华尔街</span>
+              <span class="book-author">Burton G. Malkiel</span>
+            </div>
+            <div class="book-desc">个人投资经典</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">8</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">数学通识讲义</span>
+              <span class="book-author">吴军</span>
+            </div>
+            <div class="book-desc">重新认识数学之美</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">9</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">语文通识讲义</span>
+              <span class="book-author">吴军</span>
+            </div>
+            <div class="book-desc">语言与写作的思维升级</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">10</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">自卑与超越</span>
+              <span class="book-author">Alfred Adler</span>
+            </div>
+            <div class="book-desc">个体心理学创始人代表作</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">11</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">被讨厌的勇气</span>
+              <span class="book-author">岸见一郎 &amp; 古贺史健</span>
+            </div>
+            <div class="book-desc">阿德勒思想哲学对话录</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">12</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">圆圈正义</span>
+              <span class="book-author">罗翔</span>
+            </div>
+            <div class="book-desc">正义、善恶、人性与法律的边界</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">13</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">法制的细节</span>
+              <span class="book-author">马伯里</span>
+            </div>
+            <div class="book-desc">从真实案例还原法律运作</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <div class="section-divider">
+      <span class="dash"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dash"></span>
+    </div>
+
+    <!-- Section 2: 技术 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="seal">技</div>
+        <div>
+          <span class="section-title">技术</span>
+          <span class="section-subtitle">Technology</span>
+        </div>
+        <span class="section-count">6 books</span>
+      </div>
+      <ul class="book-list">
+        <li class="book-item">
+          <span class="book-num">1</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">编程珠玑</span>
+              <span class="book-author">Jon Bentley</span>
+            </div>
+            <div class="book-desc">程序员案头经典</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">2</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">算法引论</span>
+            </div>
+            <div class="book-desc">面向实际问题的算法入门</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">3</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">黑客与画家</span>
+              <span class="book-author">Paul Graham</span>
+            </div>
+            <div class="book-desc">技术人文思考</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">4</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">重来</span>
+              <span class="book-author">Jason Fried &amp; DHH</span>
+            </div>
+            <div class="book-desc">反"商业常识"的实战宣言</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">5</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">API Security in Action</span>
+              <span class="book-author">Neil Madden</span>
+            </div>
+            <div class="book-desc">现代 API 安全设计</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">6</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">OAuth 2 in Action</span>
+              <span class="book-author">Justin Richer &amp; Antonio Sanso</span>
+            </div>
+            <div class="book-desc">OAuth 2.0 权威实践指南</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <div class="section-divider">
+      <span class="dash"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dash"></span>
+    </div>
+
+    <!-- Section 3: 小说 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="seal">文</div>
+        <div>
+          <span class="section-title">小说 · 莫泊桑</span>
+          <span class="section-subtitle">Maupassant</span>
+        </div>
+        <span class="section-count">2 books</span>
+      </div>
+      <ul class="book-list">
+        <li class="book-item">
+          <span class="book-num">1</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">羊脂球</span>
+              <span class="book-author">Guy de Maupassant</span>
+            </div>
+            <div class="book-desc">莫泊桑成名之作</div>
+          </div>
+        </li>
+        <li class="book-item">
+          <span class="book-num">2</span>
+          <div class="book-info">
+            <div class="book-title-row">
+              <span class="book-title">一生</span>
+              <span class="book-author">Guy de Maupassant</span>
+            </div>
+            <div class="book-desc">莫泊桑唯一长篇代表作</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-text">soarpatriot.github.io</p>
+      <p class="footer-year">MMXXVI</p>
+    </footer>
+
+  </div>
+</div>
+
+</body>
+</html>

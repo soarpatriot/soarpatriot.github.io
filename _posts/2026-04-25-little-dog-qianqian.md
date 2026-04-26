@@ -36,7 +36,7 @@ Went through the details of the learning APIs today.
 
 ## 🙏 Apologized to My Son
 
-I apologized to my son for throwing away his watch. He had called it during my noon snap, but that was no reason to discard it. I should have handled it better.
+I apologized to my son for throwing away his watch. He had called it while I was taking my noon nap, startling me awake — but that was no reason to discard it. I should have handled it more calmly.
 
 ---
 

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>莫泊桑《一生》书封</title>
+  <style>
+    body {
+      margin: 0;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: serif;
+    }
+    canvas {
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+    .btn {
+      margin-top: 24px;
+      padding: 10px 28px;
+      background: #c9a96e;
+      color: #1a1a2e;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
+      letter-spacing: 2px;
+    }
+    .btn:hover { background: #e0c080; }
+  </style>
+</head>
+<body>
+<canvas id="cover" width="600" height="900"></canvas>
+<button class="btn" onclick="downloadCover()">下载封面</button>
+
+<script>
+const canvas = document.getElementById('cover');
+const ctx = canvas.getContext('2d');
+const W = canvas.width;
+const H = canvas.height;
+
+function drawCover() {
+  // ── Background gradient (dusk sky) ──────────────────────────────────────
+  const sky = ctx.createLinearGradient(0, 0, 0, H * 0.62);
+  sky.addColorStop(0,    '#0d1b3e');
+  sky.addColorStop(0.35, '#1e3a5f');
+  sky.addColorStop(0.65, '#7b4f6e');
+  sky.addColorStop(1,    '#c97b5a');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Stars ────────────────────────────────────────────────────────────────
+  const stars = [
+    [60,40],[120,80],[200,30],[310,55],[420,25],[500,70],[550,40],
+    [80,130],[170,110],[260,90],[380,120],[470,100],[530,150],
+    [30,180],[140,200],[320,170],[460,190],[580,160],
+  ];
+  stars.forEach(([x,y]) => {
+    const r = Math.random() * 1.2 + 0.4;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,240,0.85)';
+    ctx.fill();
+  });
+
+  // ── Moon ─────────────────────────────────────────────────────────────────
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(480, 90, 38, 0, Math.PI*2);
+  const moonGlow = ctx.createRadialGradient(480,90,10, 480,90,55);
+  moonGlow.addColorStop(0, 'rgba(255,245,200,0.25)');
+  moonGlow.addColorStop(1, 'rgba(255,245,200,0)');
+  ctx.fillStyle = moonGlow;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(480, 90, 28, 0, Math.PI*2);
+  ctx.fillStyle = '#f5e8c0';
+  ctx.fill();
+  // crescent shadow
+  ctx.beginPath();
+  ctx.arc(492, 84, 24, 0, Math.PI*2);
+  ctx.fillStyle = '#1e3a5f';
+  ctx.fill();
+  ctx.restore();
+
+  // ── Distant cliffs / Normandy coast ──────────────────────────────────────
+  ctx.save();
+  // far cliff left
+  ctx.beginPath();
+  ctx.moveTo(0, H*0.52);
+  ctx.lineTo(0, H*0.38);
+  ctx.bezierCurveTo(40, H*0.34, 80, H*0.30, 130, H*0.33);
+  ctx.bezierCurveTo(170, H*0.36, 200, H*0.40, 240, H*0.42);
+  ctx.lineTo(240, H*0.52);
+  ctx.closePath();
+  ctx.fillStyle = '#1a2e4a';
+  ctx.fill();
+
+  // far cliff right
+  ctx.beginPath();
+  ctx.moveTo(W, H*0.52);
+  ctx.lineTo(W, H*0.36);
+  ctx.bezierCurveTo(560, H*0.32, 520, H*0.28, 470, H*0.32);
+  ctx.bezierCurveTo(430, H*0.36, 400, H*0.42, 360, H*0.44);
+  ctx.lineTo(360, H*0.52);
+  ctx.closePath();
+  ctx.fillStyle = '#1a2e4a';
+  ctx.fill();
+  ctx.restore();
+
+  // ── Sea ──────────────────────────────────────────────────────────────────
+  const seaTop = H * 0.50;
+  const seaBot = H * 0.62;
+  const sea = ctx.createLinearGradient(0, seaTop, 0, seaBot);
+  sea.addColorStop(0, '#1a4a6e');
+  sea.addColorStop(0.5, '#0d2a45');
+  sea.addColorStop(1, '#081828');
+  ctx.fillStyle = sea;
+  ctx.fillRect(0, seaTop, W, seaBot - seaTop);
+
+  // sea shimmer lines
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  for (let i = 0; i < 8; i++) {
+    const y = seaTop + (seaBot - seaTop) * (i / 8) + 6;
+    ctx.beginPath();
+    ctx.moveTo(W*0.1, y);
+    ctx.bezierCurveTo(W*0.3, y-3, W*0.6, y+3, W*0.9, y);
+    ctx.strokeStyle = '#a0d8ef';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+  }
+  // moon reflection
+  ctx.globalAlpha = 0.22;
+  const refGrad = ctx.createLinearGradient(W/2-20, seaTop, W/2+20, seaBot);
+  refGrad.addColorStop(0, '#f5e8c0');
+  refGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = refGrad;
+  ctx.fillRect(W/2 - 18, seaTop, 36, seaBot - seaTop);
+  ctx.restore();
+
+  // ── Foreground ground ────────────────────────────────────────────────────
+  const groundTop = H * 0.60;
+  const ground = ctx.createLinearGradient(0, groundTop, 0, H);
+  ground.addColorStop(0, '#1a1208');
+  ground.addColorStop(0.3, '#0e0c06');
+  ground.addColorStop(1, '#050403');
+  ctx.fillStyle = ground;
+  ctx.fillRect(0, groundTop, W, H - groundTop);
+
+  // ── Silhouette: lone woman on cliff ──────────────────────────────────────
+  ctx.save();
+  ctx.fillStyle = '#0a0806';
+
+  // dress / skirt
+  ctx.beginPath();
+  ctx.moveTo(W/2 - 2, H*0.595);
+  ctx.bezierCurveTo(W/2 - 18, H*0.63, W/2 - 22, H*0.66, W/2 - 26, H*0.685);
+  ctx.lineTo(W/2 + 26, H*0.685);
+  ctx.bezierCurveTo(W/2 + 22, H*0.66, W/2 + 18, H*0.63, W/2 + 2, H*0.595);
+  ctx.closePath();
+  ctx.fill();
+
+  // torso
+  ctx.beginPath();
+  ctx.moveTo(W/2 - 8, H*0.555);
+  ctx.lineTo(W/2 - 2, H*0.595);
+  ctx.lineTo(W/2 + 2, H*0.595);
+  ctx.lineTo(W/2 + 8, H*0.555);
+  ctx.closePath();
+  ctx.fill();
+
+  // head
+  ctx.beginPath();
+  ctx.arc(W/2, H*0.538, 10, 0, Math.PI*2);
+  ctx.fill();
+
+  // hair bun
+  ctx.beginPath();
+  ctx.arc(W/2 + 4, H*0.528, 6, 0, Math.PI*2);
+  ctx.fill();
+
+  // arm reaching out
+  ctx.beginPath();
+  ctx.moveTo(W/2 + 7, H*0.562);
+  ctx.bezierCurveTo(W/2 + 22, H*0.555, W/2 + 34, H*0.548, W/2 + 42, H*0.540);
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#0a0806';
+  ctx.stroke();
+  ctx.restore();
+
+  // ── Wildflowers / grass ──────────────────────────────────────────────────
+  ctx.save();
+  const grassColors = ['#2d4a1e', '#3a5c28', '#1e3a14', '#4a6e30'];
+  for (let i = 0; i < 120; i++) {
+    const gx = Math.random() * W;
+    const gy = H * 0.685 + Math.random() * (H * 0.315);
+    const gh = 8 + Math.random() * 22;
+    ctx.beginPath();
+    ctx.moveTo(gx, gy);
+    ctx.bezierCurveTo(
+      gx + (Math.random()-0.5)*8, gy - gh*0.5,
+      gx + (Math.random()-0.5)*10, gy - gh*0.8,
+      gx + (Math.random()-0.5)*6, gy - gh
+    );
+    ctx.lineWidth = 0.8 + Math.random()*0.8;
+    ctx.strokeStyle = grassColors[Math.floor(Math.random()*grassColors.length)];
+    ctx.globalAlpha = 0.7 + Math.random()*0.3;
+    ctx.stroke();
+  }
+  // small flowers
+  const flowerColors = ['#e8c4a0','#d4a0c0','#f0e0b0','#c8d8a0'];
+  for (let i = 0; i < 30; i++) {
+    const fx = Math.random() * W;
+    const fy = H * 0.70 + Math.random() * (H * 0.28);
+    ctx.beginPath();
+    ctx.arc(fx, fy, 2 + Math.random()*2, 0, Math.PI*2);
+    ctx.fillStyle = flowerColors[Math.floor(Math.random()*flowerColors.length)];
+    ctx.globalAlpha = 0.6 + Math.random()*0.4;
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // ── Dark overlay panel for text area ─────────────────────────────────────
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  const panelGrad = ctx.createLinearGradient(0, H*0.72, 0, H);
+  panelGrad.addColorStop(0, 'transparent');
+  panelGrad.addColorStop(0.3, 'rgba(5,4,3,0.7)');
+  panelGrad.addColorStop(1, 'rgba(5,4,3,0.95)');
+  ctx.fillStyle = panelGrad;
+  ctx.fillRect(0, H*0.72, W, H*0.28);
+  ctx.restore();
+
+  // ── Decorative top border ─────────────────────────────────────────────────
+  ctx.save();
+  ctx.strokeStyle = '#c9a96e';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(40, 28); ctx.lineTo(W-40, 28); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(40, 34); ctx.lineTo(W-40, 34); ctx.stroke();
+  // corner ornaments
+  drawCornerOrnament(ctx, 40, 28, 1, 1);
+  drawCornerOrnament(ctx, W-40, 28, -1, 1);
+  ctx.restore();
+
+  // ── Decorative bottom border ──────────────────────────────────────────────
+  ctx.save();
+  ctx.strokeStyle = '#c9a96e';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(40, H-28); ctx.lineTo(W-40, H-28); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(40, H-34); ctx.lineTo(W-40, H-34); ctx.stroke();
+  drawCornerOrnament(ctx, 40, H-28, 1, -1);
+  drawCornerOrnament(ctx, W-40, H-28, -1, -1);
+  ctx.restore();
+
+  // ── Side borders ─────────────────────────────────────────────────────────
+  ctx.save();
+  ctx.strokeStyle = '#c9a96e';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(28, 40); ctx.lineTo(28, H-40); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(34, 40); ctx.lineTo(34, H-40); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W-28, 40); ctx.lineTo(W-28, H-40); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W-34, 40); ctx.lineTo(W-34, H-40); ctx.stroke();
+  ctx.restore();
+
+  // ── Publisher label (top) ─────────────────────────────────────────────────
+  ctx.save();
+  ctx.font = '500 13px "Georgia", serif';
+  ctx.fillStyle = '#c9a96e';
+  ctx.textAlign = 'center';
+  ctx.letterSpacing = '4px';
+  ctx.fillText('GUY  DE  MAUPASSANT', W/2, 62);
+  ctx.restore();
+
+  // ── Thin divider ─────────────────────────────────────────────────────────
+  ctx.save();
+  ctx.strokeStyle = '#c9a96e';
+  ctx.lineWidth = 0.8;
+  ctx.globalAlpha = 0.6;
+  ctx.beginPath(); ctx.moveTo(W/2-80, 70); ctx.lineTo(W/2+80, 70); ctx.stroke();
+  ctx.restore();
+
+  // ── Main title 一生 ───────────────────────────────────────────────────────
+  ctx.save();
+  // glow
+  ctx.shadowColor = '#c9a96e';
+  ctx.shadowBlur = 28;
+  ctx.font = 'bold 110px "STSong","SimSun","Noto Serif SC",serif';
+  ctx.textAlign = 'center';
+  const titleGrad = ctx.createLinearGradient(W/2-100, H*0.78, W/2+100, H*0.88);
+  titleGrad.addColorStop(0, '#f5e8c0');
+  titleGrad.addColorStop(0.4, '#c9a96e');
+  titleGrad.addColorStop(0.7, '#f0d898');
+  titleGrad.addColorStop(1, '#a07840');
+  ctx.fillStyle = titleGrad;
+  ctx.fillText('一  生', W/2, H*0.875);
+  ctx.restore();
+
+  // ── French subtitle ───────────────────────────────────────────────────────
+  ctx.save();
+  ctx.font = 'italic 18px "Georgia","Times New Roman",serif';
+  ctx.fillStyle = 'rgba(220,200,160,0.75)';
+  ctx.textAlign = 'center';
+  ctx.fillText('Une Vie', W/2, H*0.905);
+  ctx.restore();
+
+  // ── Ornamental divider ────────────────────────────────────────────────────
+  ctx.save();
+  ctx.strokeStyle = '#c9a96e';
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.7;
+  const ox = W/2, oy = H*0.918;
+  ctx.beginPath(); ctx.moveTo(ox-90, oy); ctx.lineTo(ox-18, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+18, oy); ctx.lineTo(ox+90, oy); ctx.stroke();
+  // diamond
+  ctx.beginPath();
+  ctx.moveTo(ox, oy-5); ctx.lineTo(ox+8, oy); ctx.lineTo(ox, oy+5); ctx.lineTo(ox-8, oy); ctx.closePath();
+  ctx.fillStyle = '#c9a96e';
+  ctx.fill();
+  ctx.restore();
+
+  // ── Quote ─────────────────────────────────────────────────────────────────
+  ctx.save();
+  ctx.font = '14px "STSong","SimSun","Noto Serif SC",serif';
+  ctx.fillStyle = 'rgba(200,180,140,0.65)';
+  ctx.textAlign = 'center';
+  ctx.fillText('人的一生，既不是人们想象的那么好，也不是那么坏', W/2, H*0.945);
+  ctx.restore();
+
+  // ── Bottom publisher ─────────────────────────────────────────────────────
+  ctx.save();
+  ctx.font = '12px "Georgia",serif';
+  ctx.fillStyle = 'rgba(180,155,100,0.55)';
+  ctx.textAlign = 'center';
+  ctx.fillText('译林出版社', W/2, H*0.972);
+  ctx.restore();
+}
+
+function drawCornerOrnament(ctx, x, y, sx, sy) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(sx, sy);
+  ctx.strokeStyle = '#c9a96e';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(14, 0);
+  ctx.moveTo(0, 0); ctx.lineTo(0, 14);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, 6, 0, Math.PI/2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+drawCover();
+
+function downloadCover() {
+  const link = document.createElement('a');
+  link.download = '莫泊桑-一生-书封.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+</script>
+</body>
+</html>

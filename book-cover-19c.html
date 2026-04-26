@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>莫泊桑《一生》19世纪风格书封</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2a1f14;display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 20px;font-family:Georgia,serif}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.lbl{color:#c9a96e;font-size:12px;letter-spacing:3px;text-transform:uppercase}
+canvas{box-shadow:0 12px 48px rgba(0,0,0,.85);max-width:100%}
+button{padding:8px 24px;background:#8b6914;color:#f5e8c0;border:1px solid #c9a96e;border-radius:2px;font-size:13px;cursor:pointer;letter-spacing:2px;font-family:Georgia,serif}
+button:hover{background:#a07820}
+.row{display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="wrap">
+    <div class="lbl">9 : 16 — 书籍封面</div>
+    <canvas id="c916" width="720" height="1280"></canvas>
+    <button onclick="dl('c916','une-vie-9x16.png')">下载 9:16</button>
+  </div>
+  <div class="wrap">
+    <div class="lbl">16 : 9 — 横幅封面</div>
+    <canvas id="c169" width="1280" height="720"></canvas>
+    <button onclick="dl('c169','une-vie-16x9.png')">下载 16:9</button>
+  </div>
+</div>
+<script>
+function dl(id,name){var a=document.createElement('a');a.download=name;a.href=document.getElementById(id).toDataURL('image/png');a.click();}
+
+// ── Parchment background ──────────────────────────────────────────────────
+function parchment(ctx,W,H){
+  var g=ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#ede0c0');g.addColorStop(.4,'#e2d0a0');g.addColorStop(1,'#cabb88');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.save();ctx.globalAlpha=.05;
+  for(var i=0;i<W*H/80;i++){
+    ctx.fillStyle=Math.random()>.5?'#3a2800':'#fffae8';
+    ctx.fillRect(Math.random()*W,Math.random()*H,Math.random()*2.2,Math.random()*2.2);
+  }
+  ctx.restore();
+  var v=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.2,W/2,H/2,Math.max(W,H)*.85);
+  v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(25,10,0,.68)');
+  ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
+}
+
+// ── Victorian border ──────────────────────────────────────────────────────
+function border(ctx,W,H,p){
+  ctx.save();
+  ctx.strokeStyle='#3e2406';ctx.lineWidth=3.5;ctx.strokeRect(p,p,W-p*2,H-p*2);
+  ctx.lineWidth=1;ctx.strokeRect(p+7,p+7,W-(p+7)*2,H-(p+7)*2);
+  ctx.strokeStyle='#5c3410';ctx.lineWidth=2.2;ctx.strokeRect(p+16,p+16,W-(p+16)*2,H-(p+16)*2);
+  ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.strokeRect(p+23,p+23,W-(p+23)*2,H-(p+23)*2);
+  ctx.restore();
+}
+
+// ── Corner ornament ───────────────────────────────────────────────────────
+function corner(ctx,cx,cy,fx,fy){
+  ctx.save();ctx.translate(cx,cy);ctx.scale(fx,fy);
+  ctx.strokeStyle='#3e2406';ctx.fillStyle='#3e2406';ctx.lineWidth=1.4;
+  ctx.beginPath();ctx.moveTo(0,32);ctx.lineTo(0,0);ctx.lineTo(32,0);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,24);ctx.lineTo(0,7);ctx.lineTo(7,0);ctx.lineTo(24,0);ctx.stroke();
+  ctx.beginPath();ctx.arc(0,0,6,0,Math.PI/2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(16,-5);ctx.lineTo(20,0);ctx.lineTo(16,5);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(0,12);ctx.lineTo(-5,16);ctx.lineTo(0,20);ctx.lineTo(5,16);ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+
+// ── Ornamental divider ────────────────────────────────────────────────────
+function divider(ctx,cx,cy,hw){
+  ctx.save();ctx.strokeStyle='#3e2406';ctx.fillStyle='#3e2406';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(cx-hw,cy);ctx.lineTo(cx-18,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+18,cy);ctx.lineTo(cx+hw,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,cy-8);ctx.bezierCurveTo(cx-6,cy-4,cx-6,cy+4,cx,cy+8);ctx.bezierCurveTo(cx+6,cy+4,cx+6,cy-4,cx,cy-8);ctx.fill();
+  [-hw*.65,-hw*.35,hw*.35,hw*.65].forEach(function(d){ctx.beginPath();ctx.moveTo(cx+d,cy-4);ctx.lineTo(cx+d,cy+4);ctx.stroke();});
+  ctx.restore();
+}
+
+// ── Ink text ──────────────────────────────────────────────────────────────
+function ink(ctx,t,x,y,f,a,al){
+  ctx.save();ctx.font=f;ctx.textAlign=a||'center';
+  ctx.fillStyle='rgba(38,16,2,'+(al||.88)+')';ctx.fillText(t,x,y);ctx.restore();
+}
+
+// ── Hatch fill ────────────────────────────────────────────────────────────
+function hatch(ctx,x,y,w,h,col,sp,ang){
+  ctx.save();ctx.strokeStyle=col;ctx.lineWidth=.5;ctx.globalAlpha=.30;
+  ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+  var d=Math.sqrt(w*w+h*h)+10;
+  ctx.translate(x+w/2,y+h/2);ctx.rotate(ang);
+  ctx.beginPath();
+  for(var i=-d;i<d;i+=sp){ctx.moveTo(i,-d);ctx.lineTo(i,d);}
+  ctx.stroke();ctx.restore();
+}
+
+// ── Sailing ship ──────────────────────────────────────────────────────────
+function ship(ctx,cx,cy,sc){
+  ctx.save();ctx.fillStyle='#221400';ctx.strokeStyle='#221400';ctx.lineWidth=.9;
+  var s=sc/60;
+  ctx.beginPath();ctx.moveTo(cx-22*s,cy);ctx.bezierCurveTo(cx-24*s,cy+7*s,cx+20*s,cy+7*s,cx+24*s,cy);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx-3*s,cy);ctx.lineTo(cx-3*s,cy-44*s);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+9*s,cy-5*s);ctx.lineTo(cx+9*s,cy-32*s);ctx.stroke();
+  ctx.globalAlpha=.65;
+  ctx.beginPath();ctx.moveTo(cx-3*s,cy-42*s);ctx.bezierCurveTo(cx+16*s,cy-32*s,cx+18*s,cy-18*s,cx-3*s,cy-12*s);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx-3*s,cy-42*s);ctx.bezierCurveTo(cx-18*s,cy-32*s,cx-16*s,cy-18*s,cx-3*s,cy-12*s);ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+
+// ── Victorian figure ──────────────────────────────────────────────────────
+function figure(ctx,cx,by,sc){
+  ctx.save();ctx.fillStyle='#180e00';ctx.strokeStyle='#180e00';
+  var s=sc/100;
+  ctx.beginPath();ctx.moveTo(cx,by-56*s);ctx.bezierCurveTo(cx-9*s,by-40*s,cx-20*s,by-18*s,cx-24*s,by);ctx.bezierCurveTo(cx-10*s,by+2*s,cx+6*s,by+2*s,cx+20*s,by);ctx.bezierCurveTo(cx+24*s,by-14*s,cx+22*s,by-30*s,cx+15*s,by-46*s);ctx.bezierCurveTo(cx+10*s,by-52*s,cx+5*s,by-55*s,cx,by-56*s);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx-7*s,by-73*s);ctx.lineTo(cx-9*s,by-56*s);ctx.lineTo(cx+15*s,by-56*s);ctx.lineTo(cx+11*s,by-73*s);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.arc(cx+2*s,by-83*s,9*s,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+2*s,by-92*s,13*s,4.5*s,-.18,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.rect(cx-4*s,by-101*s,13*s,11*s);ctx.fill();
+  ctx.lineWidth=1.6*s;ctx.beginPath();ctx.moveTo(cx+11*s,by-76*s);ctx.lineTo(cx+30*s,by-102*s);ctx.stroke();
+  ctx.beginPath();ctx.arc(cx+22*s,by-104*s,15*s,Math.PI,Math.PI*2);ctx.fill();
+  ctx.lineWidth=.9*s;ctx.beginPath();ctx.moveTo(cx+7*s,by-104*s);ctx.lineTo(cx+37*s,by-104*s);ctx.stroke();
+  ctx.restore();
+}
+
+// ── Engraving scene ───────────────────────────────────────────────────────
+function scene(ctx,x,y,w,h){
+  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+  ctx.fillStyle='#d8c898';ctx.fillRect(x,y,w,h);
+  // Sky hatching
+  ctx.save();
+  for(var i=0;i<h*.56;i++){
+    var t=1-i/(h*.56),step=Math.max(1,Math.round(1+t*2.8));
+    if(i%step===0){ctx.globalAlpha=.07+t*.20;ctx.strokeStyle='#3e2406';ctx.lineWidth=.4;ctx.beginPath();ctx.moveTo(x,y+i);ctx.lineTo(x+w,y+i);ctx.stroke();}
+  }
+  ctx.restore();
+  // Sun
+  var sx2=x+w*.76,sy2=y+h*.17;
+  ctx.save();
+  var sg=ctx.createRadialGradient(sx2,sy2,0,sx2,sy2,h*.32);
+  sg.addColorStop(0,'rgba(255,245,190,.60)');sg.addColorStop(.25,'rgba(230,200,130,.22)');sg.addColorStop(1,'rgba(200,170,100,0)');
+  ctx.fillStyle=sg;ctx.fillRect(x,y,w,h);
+  ctx.beginPath();ctx.arc(sx2,sy2,h*.055,0,Math.PI*2);ctx.fillStyle='rgba(255,245,190,.75)';ctx.fill();
+  ctx.strokeStyle='rgba(180,145,55,.28)';ctx.lineWidth=.7;
+  for(var a=0;a<Math.PI*2;a+=Math.PI/9){ctx.beginPath();ctx.moveTo(sx2+Math.cos(a)*h*.065,sy2+Math.sin(a)*h*.065);ctx.lineTo(sx2+Math.cos(a)*h*.13,sy2+Math.sin(a)*h*.13);ctx.stroke();}
+  ctx.restore();
+  // Clouds
+  ctx.save();ctx.strokeStyle='#3e2406';ctx.lineWidth=.5;ctx.globalAlpha=.20;
+  [{cx:x+w*.18,cy:y+h*.14,rx:w*.11,ry:h*.055},{cx:x+w*.50,cy:y+h*.09,rx:w*.09,ry:h*.045},{cx:x+w*.34,cy:y+h*.21,rx:w*.07,ry:h*.038}].forEach(function(c){
+    ctx.beginPath();ctx.ellipse(c.cx,c.cy,c.rx,c.ry,0,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.ellipse(c.cx-c.rx*.38,c.cy+c.ry*.22,c.rx*.58,c.ry*.68,0,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.ellipse(c.cx+c.rx*.38,c.cy+c.ry*.22,c.rx*.52,c.ry*.62,0,0,Math.PI*2);ctx.stroke();
+    for(var ci=-c.rx;ci<c.rx;ci+=4){ctx.beginPath();ctx.moveTo(c.cx+ci,c.cy-c.ry*.75);ctx.lineTo(c.cx+ci,c.cy+c.ry*.75);ctx.stroke();}
+  });
+  ctx.restore();
+  // Horizon
+  var hy=y+h*.52;
+  ctx.save();ctx.strokeStyle='#2e1800';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x,hy);ctx.lineTo(x+w,hy);ctx.stroke();ctx.restore();
+  // Sea
+  ctx.save();
+  for(var si=0;si<h*.17;si+=2){
+    ctx.globalAlpha=.10+si/(h*.17)*.12;ctx.strokeStyle='#2e1800';ctx.lineWidth=.5+si/(h*.17)*.6;
+    ctx.beginPath();ctx.moveTo(x+Math.sin(si*.35)*5,hy+si);ctx.lineTo(x+w-Math.sin(si*.35)*5,hy+si);ctx.stroke();
+  }
+  ctx.restore();
+  // Left cliff
+  ctx.save();ctx.fillStyle='#2e1800';
+  ctx.beginPath();ctx.moveTo(x,hy);ctx.lineTo(x,y+h*.24);ctx.bezierCurveTo(x+w*.05,y+h*.17,x+w*.11,y+h*.21,x+w*.17,y+h*.27);ctx.bezierCurveTo(x+w*.21,y+h*.33,x+w*.23,y+h*.42,x+w*.25,hy);ctx.closePath();ctx.fill();ctx.restore();
+  hatch(ctx,x,y+h*.17,w*.25,hy-(y+h*.17),'rgba(240,210,140,.5)',3,Math.PI/4);
+  // Right cliff
+  ctx.save();ctx.fillStyle='#2e1800';
+  ctx.beginPath();ctx.moveTo(x+w,hy);ctx.lineTo(x+w,y+h*.21);ctx.bezierCurveTo(x+w*.93,y+h*.15,x+w*.85,y+h*.19,x+w*.79,y+h*.25);ctx.bezierCurveTo(x+w*.75,y+h*.31,x+w*.73,y+h*.42,x+w*.71,hy);ctx.closePath();ctx.fill();ctx.restore();
+  hatch(ctx,x+w*.71,y+h*.15,w*.29,hy-(y+h*.15),'rgba(240,210,140,.5)',3,-Math.PI/4);
+  // Ship
+  ship(ctx,x+w*.50,hy-h*.04,h*.09);
+  // Ground
+  var gy=y+h*.68;
+  ctx.save();ctx.fillStyle='#221400';
+  ctx.beginPath();ctx.moveTo(x,gy);ctx.bezierCurveTo(x+w*.25,gy-h*.025,x+w*.55,gy+h*.018,x+w*.82,gy-h*.018);ctx.bezierCurveTo(x+w*.92,gy-h*.008,x+w,gy+h*.01,x+w,gy);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();ctx.restore();
+  hatch(ctx,x,gy,w,y+h-gy,'#c0a050',4,Math.PI/7);
+  // Grass
+  ctx.save();ctx.strokeStyle='#180e00';ctx.lineWidth=.9;
+  for(var gi=0;gi<65;gi++){
+    var gx=x+Math.random()*w,gy2=gy+Math.random()*(y+h-gy)*.55,gh=7+Math.random()*16;
+    ctx.globalAlpha=.55+Math.random()*.45;ctx.beginPath();ctx.moveTo(gx,gy2);
+    ctx.bezierCurveTo(gx+(Math.random()-.5)*7,gy2-gh*.5,gx+(Math.random()-.5)*9,gy2-gh*.8,gx+(Math.random()-.5)*5,gy2-gh);ctx.stroke();
+  }
+  ctx.restore();
+  // Figure
+  figure(ctx,x+w*.40,gy,h*.24);
+  ctx.restore();
+}
+
+// ══════════════════════════════════════════════
+// 9:16  (720 × 1280)
+// ══════════════════════════════════════════════
+function draw916(){
+  var cv=document.getElementById('c916'),ctx=cv.getContext('2d'),W=720,H=1280;
+  parchment(ctx,W,H);
+  var sx=54,sy=88,sw=W-108,sh=Math.round(H*.50);
+  scene(ctx,sx,sy,sw,sh);
+  ctx.save();ctx.strokeStyle='#2e1800';ctx.lineWidth=2.2;ctx.strokeRect(sx,sy,sw,sh);ctx.lineWidth=.9;ctx.strokeRect(sx+5,sy+5,sw-10,sh-10);ctx.restore();
+  border(ctx,W,H,22);
+  corner(ctx,22,22,1,1);corner(ctx,W-22,22,-1,1);corner(ctx,W-22,H-22,-1,-1);corner(ctx,22,H-22,1,-1);
+  ink(ctx,'GUY  DE  MAUPASSANT',W/2,66,'500 15px Georgia,serif','center',.72);
+  ctx.save();ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.globalAlpha=.45;ctx.beginPath();ctx.moveTo(W/2-100,74);ctx.lineTo(W/2+100,74);ctx.stroke();ctx.restore();
+  divider(ctx,W/2,sy+sh+30,130);
+  ink(ctx,'法兰西文学经典',W/2,sy+sh+54,'italic 14px Georgia,serif','center',.50);
+  ctx.save();ctx.font='bold 122px "STSong","SimSun","Noto Serif SC",serif';ctx.textAlign='center';
+  ctx.fillStyle='rgba(55,25,2,.22)';ctx.fillText('一  生',W/2+3,H*.748+3);
+  ctx.fillStyle='rgba(28,10,1,.93)';ctx.fillText('一  生',W/2,H*.748);ctx.restore();
+  ink(ctx,'— Une Vie —',W/2,H*.778,'italic 19px "Georgia","Times New Roman",serif','center',.58);
+  divider(ctx,W/2,H*.800,110);
+  ink(ctx,'人的一生，既不是人们想象的那么好，也不是那么坏',W/2,H*.832,'13px "STSong","SimSun","Noto Serif SC",serif','center',.48);
+  ctx.save();ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.globalAlpha=.38;ctx.beginPath();ctx.moveTo(W/2-160,H*.848);ctx.lineTo(W/2+160,H*.848);ctx.stroke();ctx.restore();
+  ink(ctx,'译  林  出  版  社',W/2,H*.878,'13px "STSong","SimSun","Noto Serif SC",serif','center',.46);
+  ink(ctx,'MDCCCLXXXIII',W/2,H*.900,'11px Georgia,serif','center',.36);
+  ctx.save();ctx.fillStyle='rgba(62,36,6,.10)';ctx.fillRect(54,H*.920,W-108,H*.048);ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.strokeRect(54,H*.920,W-108,H*.048);ctx.restore();
+  ink(ctx,'COLLECTION  CLASSIQUE  FRANÇAISE',W/2,H*.950,'10px Georgia,serif','center',.40);
+}
+
+// ══════════════════════════════════════════════
+// 16:9  (1280 × 720)
+// ══════════════════════════════════════════════
+function draw169(){
+  var cv=document.getElementById('c169'),ctx=cv.getContext('2d'),W=1280,H=720;
+  parchment(ctx,W,H);
+  // Left illustration panel
+  var sx=48,sy=48,sw=Math.round(W*.57),sh=H-96;
+  scene(ctx,sx,sy,sw,sh);
+  ctx.save();ctx.strokeStyle='#2e1800';ctx.lineWidth=2.2;ctx.strokeRect(sx,sy,sw,sh);ctx.lineWidth=.9;ctx.strokeRect(sx+5,sy+5,sw-10,sh-10);ctx.restore();
+  // Outer border
+  border(ctx,W,H,20);
+  corner(ctx,20,20,1,1);corner(ctx,W-20,20,-1,1);corner(ctx,W-20,H-20,-1,-1);corner(ctx,20,H-20,1,-1);
+  // Right text panel
+  var tx=sx+sw+28,tw=W-tx-48,tcx=tx+tw/2;
+  // Vertical separator rules
+  ctx.save();ctx.strokeStyle='#3e2406';
+  ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(tx-14,sy+8);ctx.lineTo(tx-14,sy+sh-8);ctx.stroke();
+  ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(tx-8,sy+8);ctx.lineTo(tx-8,sy+sh-8);ctx.stroke();
+  ctx.restore();
+  // Top ornament
+  divider(ctx,tcx,sy+32,tw*.38);
+  // Author
+  ink(ctx,'GUY  DE  MAUPASSANT',tcx,sy+58,'500 14px Georgia,serif','center',.70);
+  ctx.save();ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.globalAlpha=.42;ctx.beginPath();ctx.moveTo(tcx-80,sy+66);ctx.lineTo(tcx+80,sy+66);ctx.stroke();ctx.restore();
+  // Series
+  ink(ctx,'法兰西文学经典',tcx,sy+88,'italic 13px Georgia,serif','center',.50);
+  // Decorative top rule
+  ctx.save();ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.globalAlpha=.35;ctx.beginPath();ctx.moveTo(tx,sy+100);ctx.lineTo(tx+tw,sy+100);ctx.stroke();ctx.restore();
+  // Main title
+  ctx.save();ctx.font='bold 108px "STSong","SimSun","Noto Serif SC",serif';ctx.textAlign='center';
+  ctx.fillStyle='rgba(55,25,2,.20)';ctx.fillText('一  生',tcx+3,H*.56+3);
+  ctx.fillStyle='rgba(28,10,1,.92)';ctx.fillText('一  生',tcx,H*.56);ctx.restore();
+  // French subtitle
+  ink(ctx,'— Une Vie —',tcx,H*.60,'italic 17px "Georgia","Times New Roman",serif','center',.56);
+  // Divider
+  divider(ctx,tcx,H*.635,tw*.38);
+  // Quote (two lines)
+  ink(ctx,'人的一生，',tcx,H*.675,'13px "STSong","SimSun","Noto Serif SC",serif','center',.46);
+  ink(ctx,'既不是那么好，也不是那么坏',tcx,H*.700,'13px "STSong","SimSun","Noto Serif SC",serif','center',.46);
+  // Rule
+  ctx.save();ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.globalAlpha=.35;ctx.beginPath();ctx.moveTo(tx,H*.720);ctx.lineTo(tx+tw,H*.720);ctx.stroke();ctx.restore();
+  // Publisher
+  ink(ctx,'译  林  出  版  社',tcx,H*.760,'13px "STSong","SimSun","Noto Serif SC",serif','center',.46);
+  ink(ctx,'MDCCCLXXXIII',tcx,H*.785,'11px Georgia,serif','center',.34);
+  // Bottom band
+  ctx.save();ctx.fillStyle='rgba(62,36,6,.10)';ctx.fillRect(tx,H*.808,tw,H*.060);ctx.strokeStyle='#3e2406';ctx.lineWidth=.8;ctx.strokeRect(tx,H*.808,tw,H*.060);ctx.restore();
+  ink(ctx,'CLASSIQUE  FRANÇAISE',tcx,H*.845,'10px Georgia,serif','center',.38);
+}
+
+draw916();
+draw169();
+</script>
+</body>
+</html>
