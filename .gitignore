@@ -3,5 +3,14 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+Gemfile.lock
+
+*.gem
+
+node_modules
+package-lock.json
+
+assets/js/dist
+_sass/vendors
 
 .claude/settings.local.json

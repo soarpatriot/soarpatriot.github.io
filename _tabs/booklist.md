@@ -1,15 +1,13 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
-layout: home
+layout: page
+icon: fas fa-book
+order: 5
+title: 书单
 ---
 
 > ##### 声明
 >
 > 个人观点，仅供参考。
-
-
 
 ---
 
